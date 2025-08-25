@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http_server/http_server.dart';
 import 'package:path/path.dart' as p;
 import 'dart:async';
+import 'package:flutter_linux_webview/flutter_linux_webview.dart';
+
 
 class AvatarPage extends StatefulWidget {
   const AvatarPage({super.key});
@@ -20,6 +22,23 @@ class _AvatarState extends State<AvatarPage> {
   void initState() {
     super.initState();
     // 在頁面初始化時啟動伺服器
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // 初始化 Linux WebView 插件，並禁用 GPU 以避免驅動程式問題
+    LinuxWebViewPlugin.initialize(options: {
+      'user-agent': 'Flutter Linux WebView',
+      'remote-debugging-port': '8888',
+      'autoplay-policy': 'no-user-gesture-required',
+      'disable-gpu': '',
+      'disable-gpu-sandbox': '',
+      // 'enable-gpu': '',
+      // 'enable-webgl': '',
+      // 'ignore-gpu-blocklist': '',
+      // 'use-gl': 'desktop',
+    });
+
+    // 設定 WebView 平台為 Linux
+    WebView.platform = LinuxWebView();
     startServer();
   }
 
